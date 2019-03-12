@@ -1,0 +1,4 @@
+docopt
+pygogo
+requests
+bs4
