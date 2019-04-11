@@ -172,20 +172,23 @@ def generate_html(id_list):
 
 
 def fetch_cover(release_id, refresh=False):
-
-    if refresh:
+    if not os.path.isfile(release_id[0]) or refresh:
         logger.debug("Hard refreshing cover art for {0}".format(release_id[0]))
-
-    if not os.path.isfile(release_id[0]) and not refresh:
         try:
             url = "https://{0}".format(release_id[1])
             logger.debug("Fetching {0}".format(url))
             data = requests.get(url, stream=True)
         except requests.RequestException as exc:
-            logger.error("Error fetching cover art for {0}".format(release_id[0]))
-            logger.error(exc)
-            logger.info('Shutting down')
-            return False
+            logger.error("Error fetching cover art for {0}. Attempting http.".format(release_id[0]))
+            try:
+                url = "http://{0}".format(release_id[1])
+                logger.debug("Fetching {0}".format(url))
+                data = requests.get(url, stream=True)
+
+            except requests.RequestException as second_exc:
+                logger.error(second_exc)
+                logger.info('Shutting down')
+                return False
 
         try:
             with open(release_id[0], "wb") as out_file:
@@ -202,10 +205,8 @@ def fetch_cover(release_id, refresh=False):
 
 
 def fetch_book(base_url, release_id, refresh=False):
-    if refresh:
+    if not os.path.isfile("{0}.data".format(release_id[0])) or refresh:
         logger.debug("Hard refreshing data for {0}".format(release_id[0]))
-
-    if not os.path.isfile("{0}.data".format(release_id[0])) and not refresh:
         try:
             url = "https://{0}/{1}/".format(base_url, release_id[0])
             logger.debug("Fetching {0}".format(url))
