@@ -1,0 +1,33 @@
+#coverart {
+    background-color: #ffffff;
+    margin: 0 0 20px 0;
+}
+
+div.table {
+    display: table;
+    margin: 0 auto;
+    max-width: 600px;
+}
+
+
+ul.collage_images {
+    max-width: 600px;
+    border-collapse: collapse;
+    margin: 0 0 0 0;
+    list-style-position: inside;
+    padding: 0;
+    overflow: auto;
+}
+
+ul.collage_images li {
+    border: none;
+    margin: auto;
+    list-style: none;
+    text-align: center;
+    display: inline;
+}
+
+ul.collage_images img {
+    width: 150px;
+    height: 230px;
+}

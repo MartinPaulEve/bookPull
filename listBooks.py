@@ -123,11 +123,8 @@ def main(args):
 
 
 def generate_html(id_list):
-    first_td = ['', '']
-    second_td = ['', '']
-    td_first = ''
-    td_second = ''
-    output_html = ''
+
+    output_html = '<div id="coverart" class="box"><ul class="collage_images" id="collage_book"><div class="table">'
     for release_id in id_list:
         try:
             with open("{0}.data".format(release_id), "r") as in_file:
@@ -136,38 +133,18 @@ def generate_html(id_list):
                 title = fields[0]
                 press = fields[1]
                 year = fields[2]
-                url = fields[3]
+                url = 'https://{0}'.format(fields[3])
 
-                td_first = ' <td><a href="https://{0}"><img itemprop="image" src="{1}" alt="{2}" ' \
-                           'style="width:150px;max-width:150px;height:231px" /></a></span></td>'.format(url,
-                                                                                                        release_id,
-                                                                                                        title)
+                out = '<li class="image_group"><a href="{0}"><img class="tooltip_interactive" src="{1}" alt="{2} - {3} [{4}]" title="{2} - {3} [{4}]" data-title-plain="{2} - {3} [{4}]" /></a></li>'.format(url, release_id, title, press, year)
 
-                td_second = '<td style="padding-bottom: 15px;"><a href="https://{0}">{1}</a>' \
-                            '<br />({2}, {3})</td>'.format(url, title, press, year)
-
-                new_output_html, first_td, second_td = process_arrays(first_td, second_td, td_first, td_second)
-                output_html += new_output_html
+                output_html += out
         except EnvironmentError:
             logger.error('Cannot write data file for {0}'.format(release_id))
             logger.info('Shutting down')
             return False
 
-    # at this point, we need to check whether to write the final line
-    if first_td[0] == '':
-        # do nothing
-        pass
-    elif first_td[1] == '':
-        # one is loaded, the other empty
-        logger.debug("Building last blank entry")
-        td_first = '<td></td>'
-        td_second = '<td style="padding-bottom: 15px;"></td>'
-        new_output_html, first_td, second_td = process_arrays(first_td, second_td, td_first, td_second)
-        output_html += new_output_html
-    else:
-        # both loaded
-        new_output_html, first_td, second_td = process_arrays(first_td, second_td, td_first, td_second)
-        output_html += new_output_html
+    output_html += '</ul></div></div>'
+
     return output_html
 
 
@@ -236,34 +213,6 @@ def fetch_book(base_url, release_id, refresh=False):
         logger.debug("Using pre-fetched data for {0}".format(release_id[0]))
 
     return True
-
-
-def process_arrays(first_td, second_td, td_first, td_second):
-    output_html = ""
-    if first_td[0] == '':
-        logger.debug("Loading to first TD")
-        first_td[0] = td_first
-    elif first_td[1] == '':
-        logger.debug("Loading to second TD")
-        first_td[1] = td_first
-
-    if second_td[0] == '':
-        second_td[0] = td_second
-    elif second_td[1] == '':
-        logger.debug("Array is loaded so building and emptying")
-        second_td[1] = td_second
-        # the array is loaded so append the output
-        tr_first = "<tr>{0}{1}</tr>".format(first_td[0], first_td[1])
-        tr_second = "<tr>{0}{1}</tr>".format(second_td[0], second_td[1])
-
-        output_html += tr_first
-        output_html += tr_second
-
-        # unload the arrays
-        first_td = ['', '']
-        second_td = ['', '']
-
-    return output_html, first_td, second_td
 
 
 if __name__ == "__main__":

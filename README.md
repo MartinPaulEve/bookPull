@@ -17,18 +17,23 @@ Options:
   --debug       Enable debug output.
   --refresh     Delete cached versions and do a hard refresh from the eprints server.
 
-Info:
+```
+
+## Setup
 
 The ID file specified should have a colon-delimited list of eprint record IDs, an image URL, and a link URL.
 
 An example list might look like this:
+<pre>
 26645:eve.gd/images/anxietycover.png:eprints.bbk.ac.uk/26645/
 21102:eve.gd/images/anxietycover.png:eprints.bbk.ac.uk/21102/
 20716:www.sup.org/img/covers/med_large/pid_30253.jpg:www.amazon.co.uk/Close-Reading-Computers-Scholarship-Computational/dp/1503609367/
+</pre>
 
-Note that no field should contain a colon (":").
+Note that no _field_ should contain a colon (":").
 
-The template file should have a block of text "[CONTENTS]" within a table.
+The template file should have a block of text "[CONTENTS]" where you want the book cover art to appear.
+
+You will also need to include [the CSS](books.css) in your template.
 
 The base URL should be an eprints repository, like eprints.bbk.ac.uk.
-```
